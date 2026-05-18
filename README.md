@@ -40,12 +40,13 @@
 ║────────────────────║─────────────────────────────────────────────────────║
 ║ › Dev Essentials   ║  Dev Essentials                                     ║
 ║   Terminal Theme   ║                                                     ║
-║   Git Setup        ║  Instala as ferramentas centrais de desenvolvimento:║
-║   SSH Manager      ║  • Git — controle de versão                         ║
-║   System Tweaks    ║  • NVS — gerenciador de versões do Node.js          ║
-║   Apps Opcionais   ║  • Node.js LTS — runtime JavaScript                 ║
-║   ─────────────    ║  • VS Code — editor de código                       ║
-║   Instalar Tudo    ║  • Postman — testes de API                          ║
+║   PowerShell Setup ║  Instala as ferramentas centrais de desenvolvimento:║
+║   Git Setup        ║  • Git — controle de versão                         ║
+║   SSH Manager      ║  • NVS — gerenciador de versões do Node.js          ║
+║   System Tweaks    ║  • Node.js LTS — runtime JavaScript                 ║
+║   Apps Opcionais   ║  • VS Code — editor de código                       ║
+║   ─────────────    ║  • Postman — testes de API                          ║
+║   Instalar Tudo    ║                                                     ║
 ║   Sair             ║                                                     ║
 ╠════════════════════╩═════════════════════════════════════════════════════╣
 ║  [↑↓] Navegar   [Enter] Selecionar   [Q] Sair                           ║
@@ -102,7 +103,7 @@ Instala as ferramentas base via winget:
 ---
 
 ### Terminal Theme — Oh My Posh
-Configura um terminal com visual **cyberpunk neon**:
+Configura um terminal com visual **cyberpunk neon** em dois ambientes:
 
 - **JetBrainsMono Nerd Font** — fonte com suporte a ícones
 - **Oh My Posh** — motor de temas para o prompt
@@ -111,8 +112,39 @@ Configura um terminal com visual **cyberpunk neon**:
   - Execution time e horário no prompt direito
   - Paleta: cyan `#00eaff` · pink `#ff00c8` · green `#0aff9d`
 
+**PowerShell** — insere no `$PROFILE.CurrentUserAllHosts`:
+```powershell
+oh-my-posh init pwsh --config "welldone_neon.omp.json" | Invoke-Expression
+```
+
+**Git Bash** — insere no `~/.bashrc`:
+```bash
+eval "$(oh-my-posh init bash --config '/c/path/to/welldone_neon.omp.json')"
+```
+
 Após instalar, configure a fonte **JetBrainsMono Nerd Font** no Windows Terminal:
 > `Settings → Profiles → Defaults → Appearance → Font face`
+
+---
+
+### PowerShell Setup
+Instala e configura o PowerShell moderno com experiência aprimorada:
+
+| Componente | Descrição |
+|---|---|
+| **PowerShell 7** | Versão multiplataforma, mais rápida que o PS 5.1 |
+| **PSReadLine** | Syntax highlight com paleta neon, predição por histórico |
+| **Terminal-Icons** | Ícones de arquivo e pasta coloridos no terminal |
+
+Cores do PSReadLine mapeadas para a paleta WellDone Neon:
+
+| Elemento | Cor |
+|---|---|
+| Command | `#0aff9d` (green) |
+| Parameter | `#00eaff` (cyan) |
+| String | `#ffcc00` (yellow) |
+| Comment | `#646482` (gray) |
+| Error | `#ff0066` (red) |
 
 ---
 
@@ -165,13 +197,23 @@ Menu de seleção múltipla — escolha apenas o que quiser:
 | Discord | Comunidade |
 | Microsoft Teams | Trabalho |
 | Notion | Produtividade |
+| Obsidian | Produtividade |
+| Google Drive | Produtividade |
 | Steam | Games |
 | Epic Games | Games |
 
 ---
 
 ### Instalar Tudo
-Executa todos os módulos em sequência — ideal para configurar um PC novo do zero.
+Executa todos os módulos em sequência — ideal para configurar um PC novo do zero:
+
+1. Dev Essentials
+2. Terminal Theme (PowerShell + Git Bash)
+3. PowerShell Setup
+4. Git Setup
+5. SSH Manager
+6. System Tweaks
+7. Apps Opcionais
 
 ---
 
@@ -192,7 +234,8 @@ welldone-devkit/
     │   └── ui.ps1                 ← engine TUI (painéis, menu, boot screen)
     └── modules/
         ├── install_dev_essentials.ps1
-        ├── install_terminal_theme.ps1
+        ├── install_terminal_theme.ps1  ← Oh My Posh (PS + Git Bash)
+        ├── setup_powershell.ps1        ← PS7 + PSReadLine + Terminal-Icons
         ├── setup_git.ps1
         ├── manage_ssh.ps1
         ├── system_tweaks.ps1

@@ -7,9 +7,11 @@ param([string]$Root)
 Show-ModuleHeader "TERMINAL THEME — OH MY POSH"
 
 Write-Host "  ${CYAN}O que será configurado:${NC}"
-Write-Host "  ${GRAY}• FiraCode Nerd Font (fonte com ícones para o prompt)${NC}"
+Write-Host "  ${GRAY}• JetBrainsMono Nerd Font (fonte com ícones para o prompt)${NC}"
 Write-Host "  ${GRAY}• Oh My Posh (motor de tema do terminal)${NC}"
 Write-Host "  ${GRAY}• Tema WellDone Neon (tema cyberpunk personalizado)${NC}"
+Write-Host "  ${GRAY}• Perfil PowerShell — oh-my-posh init pwsh${NC}"
+Write-Host "  ${GRAY}• Git Bash .bashrc    — oh-my-posh init bash${NC}"
 Write-Host ""
 
 if (-not (Test-Winget)) {
@@ -59,6 +61,24 @@ Run-Step "Gravando perfil PowerShell" {
     } else {
         $existing = $existing -replace "(?m)^oh-my-posh init.*$", $initLine
         Set-Content -Path $profile6 -Value $existing
+    }
+}
+
+# Step 6 — write Git Bash profile (.bashrc)
+$gitBashRc = Join-Path $env:USERPROFILE ".bashrc"
+$posixTheme = $activeTheme -replace "\\", "/"
+if ($posixTheme -match "^([A-Za-z]):") {
+    $posixTheme = "/" + $Matches[1].ToLower() + $posixTheme.Substring(2)
+}
+$bashLine = 'eval "$(oh-my-posh init bash --config ' + "'$posixTheme'" + ')"'
+
+Run-Step "Configurando Git Bash (.bashrc)" {
+    $existing = if (Test-Path $gitBashRc) { Get-Content $gitBashRc -Raw } else { "" }
+    if ($existing -notmatch "oh-my-posh") {
+        Add-Content -Path $gitBashRc -Value "`n# WellDone DevKit — Oh My Posh (Git Bash)`n$bashLine"
+    } else {
+        $updated = $existing -replace "(?m)^eval.*oh-my-posh init bash.*$", $bashLine
+        Set-Content -Path $gitBashRc -Value $updated
     }
 }
 

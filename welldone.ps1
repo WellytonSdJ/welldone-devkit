@@ -26,6 +26,7 @@ $Host.UI.RawUI.WindowTitle = "WellDone DevKit v2.0"
 $menuItems = @(
     "  Dev Essentials"
     "  Terminal Theme"
+    "  PowerShell Setup"
     "  Git Setup"
     "  SSH Manager"
     "  System Tweaks"
@@ -61,14 +62,34 @@ Configura um terminal cyberpunk neon:
   • Tema WellDone Neon — visual personalizado
     (cyan, pink, purple em fundo escuro)
 
-O tema inclui: caminho atual, branch git,
-versão do Node, horário e ícones coloridos.
+Aplica o tema em dois ambientes:
+  • PowerShell — perfil CurrentUserAllHosts
+  • Git Bash   — ~/.bashrc (init bash)
 
 Após instalar, configure a fonte no
 Windows Terminal → Configurações → Perfil.
 "@
     }
-    @{  # 2 — Git Setup
+    @{  # 2 — PowerShell Setup
+        Title = "PowerShell Setup"
+        Body  = @"
+Instala e configura o PowerShell moderno:
+
+  • PowerShell 7 (pwsh) — cross-platform,
+    mais rápido que o Windows PowerShell 5.1
+
+  • PSReadLine — syntax highlight em cores
+    neon, predição por histórico (ListView),
+    Tab completion avançado
+
+  • Terminal-Icons — ícones de arquivo e
+    pasta coloridos no terminal
+
+As cores do PSReadLine seguem a paleta
+WellDone Neon (cyan, green, yellow, pink).
+"@
+    }
+    @{  # 3 — Git Setup  (index shifted)
         Title = "Git Setup"
         Body  = @"
 Configura o Git globalmente no seu sistema:
@@ -114,7 +135,7 @@ Algumas mudanças exigem reiniciar o
 Explorer ou fazer logoff/login.
 "@
     }
-    @{  # 5 — Apps Opcionais
+    @{  # 6 — Apps Opcionais
         Title = "Apps Opcionais"
         Body  = @"
 Selecione os apps que deseja instalar:
@@ -126,7 +147,7 @@ Selecione os apps que deseja instalar:
     • Discord   • Microsoft Teams
 
   Produtividade
-    • Notion — notas e organização
+    • Notion   • Obsidian   • Google Drive
 
   Entretenimento
     • Spotify   • Steam   • Epic Games
@@ -135,21 +156,22 @@ Você escolhe quais instalar com um menu
 de seleção múltipla antes de confirmar.
 "@
     }
-    @{  # 6 — separator (dummy)
+    @{  # 7 — separator (dummy)
         Title = ""
         Body  = ""
     }
-    @{  # 7 — Instalar Tudo
+    @{  # 8 — Instalar Tudo
         Title = "Instalar Tudo"
         Body  = @"
 Executa todos os módulos em sequência:
 
   1. Dev Essentials
   2. Terminal Theme
-  3. Git Setup
-  4. SSH Manager
-  5. System Tweaks
-  6. Apps Opcionais
+  3. PowerShell Setup
+  4. Git Setup
+  5. SSH Manager
+  6. System Tweaks
+  7. Apps Opcionais
 
 Cada módulo pede confirmação quando
 necessário. O processo pode demorar
@@ -158,7 +180,7 @@ alguns minutos dependendo da conexão.
 Ideal para configurar um PC novo do zero.
 "@
     }
-    @{  # 8 — Sair
+    @{  # 9 — Sair
         Title = "Sair"
         Body  = @"
 Encerra o WellDone DevKit.
@@ -185,6 +207,7 @@ function Run-AllModules {
 
     Invoke-Module "install_dev_essentials.ps1"
     Invoke-Module "install_terminal_theme.ps1"
+    Invoke-Module "setup_powershell.ps1"
     Invoke-Module "setup_git.ps1"
     Invoke-Module "manage_ssh.ps1"
     Invoke-Module "system_tweaks.ps1"
@@ -212,17 +235,18 @@ while ($true) {
     switch ($choice) {
         0  { Invoke-Module "install_dev_essentials.ps1"  }
         1  { Invoke-Module "install_terminal_theme.ps1"  }
-        2  { Invoke-Module "setup_git.ps1"               }
-        3  { Invoke-Module "manage_ssh.ps1"              }
-        4  { Invoke-Module "system_tweaks.ps1"           }
-        5  { Invoke-Module "install_optional_apps.ps1"   }
-        6  {}   # separator — do nothing
-        7  { Run-AllModules                              }
-        8  { break }
+        2  { Invoke-Module "setup_powershell.ps1"        }
+        3  { Invoke-Module "setup_git.ps1"               }
+        4  { Invoke-Module "manage_ssh.ps1"              }
+        5  { Invoke-Module "system_tweaks.ps1"           }
+        6  { Invoke-Module "install_optional_apps.ps1"   }
+        7  {}   # separator — do nothing
+        8  { Run-AllModules                              }
+        9  { break }
         -1 { break }
     }
 
-    if ($choice -eq 8 -or $choice -eq -1) { break }
+    if ($choice -eq 9 -or $choice -eq -1) { break }
 }
 
 # ─── Goodbye ──────────────────────────────────────────────────────────────────
