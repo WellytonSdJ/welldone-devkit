@@ -12,14 +12,14 @@ if (-not (Test-Winget)) {
 }
 
 Write-Host "  ${CYAN}Ferramentas que serão instaladas:${NC}"
-Write-Host "  ${GRAY}• Git   • NVS   • Node.js LTS   • VS Code   • Postman${NC}"
+Write-Host "  ${GRAY}• Git   • NVS   • Node.js LTS   • VS Code   • Hoppscotch${NC}"
 Write-Host ""
 
 $packages = @(
     @{ Id='Git.Git';                     Name='Git'          }
     @{ Id='jasongin.nvs';                Name='NVS'          }
     @{ Id='Microsoft.VisualStudioCode';  Name='VS Code'      }
-    @{ Id='Postman.Postman';             Name='Postman'      }
+    @{ Id='Hoppscotch.Hoppscotch';       Name='Hoppscotch'   }
 )
 
 $ok = $true

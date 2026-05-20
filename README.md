@@ -45,7 +45,7 @@
 ║   SSH Manager      ║  • NVS — gerenciador de versões do Node.js          ║
 ║   System Tweaks    ║  • Node.js LTS — runtime JavaScript                 ║
 ║   Apps Opcionais   ║  • VS Code — editor de código                       ║
-║   ─────────────    ║  • Postman — testes de API                          ║
+║   ─────────────    ║  • Hoppscotch — cliente de API open-source          ║
 ║   Instalar Tudo    ║                                                     ║
 ║   Sair             ║                                                     ║
 ╠════════════════════╩═════════════════════════════════════════════════════╣
@@ -98,7 +98,7 @@ Instala as ferramentas base via winget:
 | **NVS** | Gerenciador de versões do Node.js |
 | **Node.js LTS** | Runtime JavaScript (via NVS) |
 | **VS Code** | Editor de código |
-| **Postman** | Testes de API |
+| **Hoppscotch** | Cliente de API open-source (substituto leve do Postman) |
 
 ---
 
@@ -199,6 +199,7 @@ Menu de seleção múltipla — escolha apenas o que quiser:
 | Notion | Produtividade |
 | Obsidian | Produtividade |
 | Google Drive | Produtividade |
+| Postman | API Tools |
 | Steam | Games |
 | Epic Games | Games |
 

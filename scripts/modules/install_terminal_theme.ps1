@@ -82,8 +82,37 @@ Run-Step "Configurando Git Bash (.bashrc)" {
     }
 }
 
+# Step 7 — configure Warp font if Warp is installed
+$warpExe = "$env:LOCALAPPDATA\Programs\Warp\Warp.exe"
+if (Test-Path $warpExe) {
+    $warpConfigDir = "$env:USERPROFILE\.warp"
+    $warpPrefs     = "$warpConfigDir\preferences.yaml"
+
+    Run-Step "Configurando fonte no Warp Terminal" {
+        if (-not (Test-Path $warpConfigDir)) {
+            New-Item -ItemType Directory -Force -Path $warpConfigDir | Out-Null
+        }
+        $fontBlock = "font_name: JetBrainsMono Nerd Font`nfont_size: 14"
+        if (Test-Path $warpPrefs) {
+            $raw = Get-Content $warpPrefs -Raw
+            if ($raw -notmatch "font_name") {
+                Add-Content -Path $warpPrefs -Value "`n$fontBlock"
+            } else {
+                $raw = $raw -replace "(?m)^font_name:.*$", "font_name: JetBrainsMono Nerd Font"
+                Set-Content -Path $warpPrefs -Value $raw
+            }
+        } else {
+            Set-Content -Path $warpPrefs -Value $fontBlock
+        }
+    }
+    Write-Host "  ${GRAY}O Oh My Posh já está configurado no perfil do PowerShell — o Warp carregará automaticamente.${NC}"
+} else {
+    Write-Host "  ${GRAY}Dica Warp: instale via '${WHITE}Apps Opcionais${GRAY}' e configure a fonte ${WHITE}JetBrainsMono Nerd Font${GRAY} em${NC}"
+    Write-Host "  ${GRAY}  Warp → Settings → Appearance → Font.${NC}"
+}
+
 Write-Host ""
 Write-Host "  ${GREEN}✓ Tema aplicado!${NC}"
-Write-Host "  ${GRAY}Dica: configure a fonte '${WHITE}JetBrainsMono Nerd Font${GRAY}' no Windows Terminal.${NC}"
+Write-Host "  ${GRAY}Dica: configure a fonte '${WHITE}JetBrainsMono Nerd Font${GRAY}' no Windows Terminal e no Warp.${NC}"
 Write-Host "  ${GRAY}Reinicie o terminal para ver as mudanças.${NC}"
 Pause-Prompt

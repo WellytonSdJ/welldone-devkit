@@ -46,7 +46,7 @@ Instala as ferramentas centrais de desenvolvimento:
   • NVS — gerenciador de versões do Node.js
   • Node.js LTS — runtime JavaScript
   • VS Code — editor de código
-  • Postman — testes de API
+  • Hoppscotch — cliente de API open-source
 
 Todos os pacotes são instalados via winget com
 flags --silent --accept-agreements.
@@ -140,6 +140,10 @@ Explorer ou fazer logoff/login.
         Body  = @"
 Selecione os apps que deseja instalar:
 
+  Terminal
+    • Warp — terminal moderno com IA integrada
+      (Oh My Posh carregado automaticamente)
+
   Browser
     • Opera GX — navegador para gamers/devs
 
@@ -148,6 +152,9 @@ Selecione os apps que deseja instalar:
 
   Produtividade
     • Notion   • Obsidian   • Google Drive
+
+  API Tools
+    • Postman — cliente de API completo
 
   Entretenimento
     • Spotify   • Steam   • Epic Games

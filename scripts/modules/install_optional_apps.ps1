@@ -7,6 +7,7 @@ param([string]$Root)
 Show-ModuleHeader "APPS OPCIONAIS"
 
 $apps = @(
+    @{ Id='Warp.Warp';                     Name='Warp Terminal';   Cat='Terminal'      }
     @{ Id='Opera.OperaGX';                 Name='Opera GX';        Cat='Browser'       }
     @{ Id='Spotify.Spotify';               Name='Spotify';         Cat='Música'        }
     @{ Id='Discord.Discord';               Name='Discord';         Cat='Comunidade'    }
@@ -14,6 +15,7 @@ $apps = @(
     @{ Id='XPDBVSS44R0L9H';               Name='Notion';          Cat='Produtividade' }
     @{ Id='Obsidian.Obsidian';            Name='Obsidian';        Cat='Produtividade' }
     @{ Id='Google.GoogleDrive';           Name='Google Drive';    Cat='Produtividade' }
+    @{ Id='Postman.Postman';              Name='Postman';         Cat='API Tools'     }
     @{ Id='Valve.Steam';                   Name='Steam';           Cat='Games'         }
     @{ Id='EpicGames.EpicGamesLauncher';   Name='Epic Games';      Cat='Games'         }
 )
@@ -33,17 +35,17 @@ while ($true) {
     }
     Write-Host ""
     Write-Host "  ${CYAN}›${NC} ${WHITE}Número, 'a' (todos), ou Enter para instalar: ${NC}" -NoNewline
-    $input = Read-Host
+    $choice = Read-Host
 
-    if ($input -eq "") { break }
-    if ($input -eq "a" -or $input -eq "A") {
+    if ($choice -eq "") { break }
+    if ($choice -eq "a" -or $choice -eq "A") {
         $selected = @($true) * $apps.Count
         Clear-Host
         Show-ModuleHeader "APPS OPCIONAIS"
         continue
     }
     $n = 0
-    if ([int]::TryParse($input, [ref]$n) -and $n -ge 1 -and $n -le $apps.Count) {
+    if ([int]::TryParse($choice, [ref]$n) -and $n -ge 1 -and $n -le $apps.Count) {
         $selected[$n - 1] = -not $selected[$n - 1]
     }
     Clear-Host
