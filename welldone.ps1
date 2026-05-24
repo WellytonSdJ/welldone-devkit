@@ -20,7 +20,7 @@ $Root = $PSScriptRoot
 
 Enable-VirtualTerminal
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-$Host.UI.RawUI.WindowTitle = "WellDone DevKit v2.0"
+$Host.UI.RawUI.WindowTitle = "WellDone DevKit v2.1"
 
 # ─── Menu definition ──────────────────────────────────────────────────────────
 $menuItems = @(
@@ -154,7 +154,8 @@ Selecione os apps que deseja instalar:
     • Notion   • Obsidian   • Google Drive
 
   API Tools
-    • Postman — cliente de API completo
+    • Hoppscotch — cliente de API open-source
+    • Postman — cliente de API (alternativo)
 
   Entretenimento
     • Spotify   • Steam   • Epic Games
@@ -237,7 +238,7 @@ Show-BootScreen
 
 while ($true) {
     $choice = Show-Menu -Items $menuItems -Descriptions $descriptions `
-              -Subtitle "v2.0  |  github.com/WellytonSdJ/welldone-devkit"
+              -Subtitle "v2.1  |  github.com/WellytonSdJ/welldone-devkit"
 
     switch ($choice) {
         0  { Invoke-Module "install_dev_essentials.ps1"  }

@@ -7,7 +7,7 @@
  ██║███╗██║██╔══╝  ██║     ██║     ██║  ██║██║   ██║██║╚██╗██║██╔══╝
  ╚███╔███╔╝███████╗███████╗███████╗██████╔╝╚██████╔╝██║ ╚████║███████╗
   ╚══╝╚══╝ ╚══════╝╚══════╝╚══════╝╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝
-                    ░▒▓  D E V K I T  v 2 . 0  ▓▒░
+                    ░▒▓  D E V K I T  v 2 . 1  ▓▒░
 ```
 
 **Instalador interativo de ambiente de desenvolvimento para Windows**
@@ -34,7 +34,7 @@
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
 ║         [  ASCII art WELLDONE DEVKIT  ]                                  ║
-╟─ v2.0  |  github.com/WellytonSdJ/welldone-devkit ──────────────────────╢
+╟─ v2.1  |  github.com/WellytonSdJ/welldone-devkit ──────────────────────╢
 ╠════════════════════╦═════════════════════════════════════════════════════╣
 ║  OPÇÕES            ║  DESCRIÇÃO                                          ║
 ║────────────────────║─────────────────────────────────────────────────────║
@@ -110,7 +110,7 @@ Configura um terminal com visual **cyberpunk neon** em dois ambientes:
 - **Tema WellDone Neon** — tema personalizado com:
   - Segmento de OS, caminho atual, branch git, versão do Node
   - Execution time e horário no prompt direito
-  - Paleta: cyan `#00eaff` · pink `#ff00c8` · green `#0aff9d`
+  - Paleta: cyan `#00eaff` · lavanda `#b388ff` · green `#0aff9d`
 
 **PowerShell** — insere no `$PROFILE.CurrentUserAllHosts`:
 ```powershell
@@ -199,7 +199,8 @@ Menu de seleção múltipla — escolha apenas o que quiser:
 | Notion | Produtividade |
 | Obsidian | Produtividade |
 | Google Drive | Produtividade |
-| Postman | API Tools |
+| **Hoppscotch** | API Tools |
+| Postman | API Tools (alternativo) |
 | Steam | Games |
 | Epic Games | Games |
 

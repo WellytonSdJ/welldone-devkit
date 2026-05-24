@@ -15,7 +15,8 @@ $apps = @(
     @{ Id='XPDBVSS44R0L9H';               Name='Notion';          Cat='Produtividade' }
     @{ Id='Obsidian.Obsidian';            Name='Obsidian';        Cat='Produtividade' }
     @{ Id='Google.GoogleDrive';           Name='Google Drive';    Cat='Produtividade' }
-    @{ Id='Postman.Postman';              Name='Postman';         Cat='API Tools'     }
+    @{ Id='hoppscotch.hoppscotch';        Name='Hoppscotch';      Cat='API Tools'     }
+    @{ Id='Postman.Postman';              Name='Postman';         Cat='API Tools (alternativo)' }
     @{ Id='Valve.Steam';                   Name='Steam';           Cat='Games'         }
     @{ Id='EpicGames.EpicGamesLauncher';   Name='Epic Games';      Cat='Games'         }
 )
