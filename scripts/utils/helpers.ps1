@@ -49,6 +49,11 @@ function Test-Winget {
     return (Get-Command winget -ErrorAction SilentlyContinue) -ne $null
 }
 
+function Test-PackageInstalled([string]$Id) {
+    $result = winget list --id $Id --exact 2>&1 | Out-String
+    return $result -match $Id
+}
+
 function Install-Package {
     param([string]$Id, [string]$Name)
     Run-Step "Instalando ${Name}" {

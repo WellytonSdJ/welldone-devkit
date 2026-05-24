@@ -21,6 +21,12 @@ $apps = @(
     @{ Id='EpicGames.EpicGamesLauncher';   Name='Epic Games';      Cat='Games'         }
 )
 
+Write-Host "  ${CYAN}Verificando apps já instalados...${NC}"
+$installed = @($false) * $apps.Count
+for ($i = 0; $i -lt $apps.Count; $i++) {
+    $installed[$i] = Test-PackageInstalled $apps[$i].Id
+}
+
 Write-Host "  ${CYAN}Selecione os apps para instalar:${NC}"
 Write-Host "  ${GRAY}(pressione número + Enter para alternar, ou 'a' para todos, 'Enter' para instalar)${NC}"
 Write-Host ""
@@ -30,24 +36,36 @@ $selected = @($false) * $apps.Count
 # Selection loop
 while ($true) {
     for ($i = 0; $i -lt $apps.Count; $i++) {
-        $check = if ($selected[$i]) { "${GREEN}[✓]${NC}" } else { "${GRAY}[ ]${NC}" }
-        $cat   = "${GRAY}($($apps[$i].Cat))${NC}"
-        Write-Host "  $check ${WHITE}$($i+1).${NC} $($apps[$i].Name) $cat"
+        if ($installed[$i]) {
+            $check = "${GREEN}[✓]${NC}"
+            $label = "${GRAY}$($apps[$i].Name)${NC}"
+            $cat   = "${GREEN}(já instalado)${NC}"
+        } else {
+            $check = if ($selected[$i]) { "${CYAN}[✓]${NC}" } else { "${GRAY}[ ]${NC}" }
+            $label = "${WHITE}$($apps[$i].Name)${NC}"
+            $cat   = "${GRAY}($($apps[$i].Cat))${NC}"
+        }
+        Write-Host "  $check ${WHITE}$($i+1).${NC} $label $cat"
     }
     Write-Host ""
-    Write-Host "  ${CYAN}›${NC} ${WHITE}Número, 'a' (todos), ou Enter para instalar: ${NC}" -NoNewline
+    Write-Host "  ${CYAN}›${NC} ${WHITE}Número, 'a' (todos não instalados), ou Enter para instalar: ${NC}" -NoNewline
     $choice = Read-Host
 
     if ($choice -eq "") { break }
     if ($choice -eq "a" -or $choice -eq "A") {
-        $selected = @($true) * $apps.Count
+        for ($i = 0; $i -lt $apps.Count; $i++) {
+            $selected[$i] = -not $installed[$i]
+        }
         Clear-Host
         Show-ModuleHeader "APPS OPCIONAIS"
         continue
     }
     $n = 0
     if ([int]::TryParse($choice, [ref]$n) -and $n -ge 1 -and $n -le $apps.Count) {
-        $selected[$n - 1] = -not $selected[$n - 1]
+        $idx = $n - 1
+        if (-not $installed[$idx]) {
+            $selected[$idx] = -not $selected[$idx]
+        }
     }
     Clear-Host
     Show-ModuleHeader "APPS OPCIONAIS"
