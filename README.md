@@ -23,7 +23,7 @@
 
 ## O que é?
 
-**WellDone DevKit** é uma TUI (*Terminal User Interface*) interativa em PowerShell que automatiza a instalação e configuração de um ambiente de desenvolvimento completo no Windows — com visual cyberpunk neon, navegação por teclado e descrições detalhadas de cada opção.
+**WellDone DevKit** é um instalador interativo em PowerShell que automatiza a configuração de um ambiente de desenvolvimento completo no Windows — com visual cyberpunk neon e navegação por número.
 
 > Configure um PC do zero em minutos, sem abrir navegador.
 
@@ -33,23 +33,21 @@
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
-║         [  ASCII art WELLDONE DEVKIT  ]                                  ║
-╟─ v2.1  |  github.com/WellytonSdJ/welldone-devkit ──────────────────────╢
-╠════════════════════╦═════════════════════════════════════════════════════╣
-║  OPÇÕES            ║  DESCRIÇÃO                                          ║
-║────────────────────║─────────────────────────────────────────────────────║
-║ › Dev Essentials   ║  Dev Essentials                                     ║
-║   Terminal Theme   ║                                                     ║
-║   PowerShell Setup ║  Instala as ferramentas centrais de desenvolvimento:║
-║   Git Setup        ║  • Git — controle de versão                         ║
-║   SSH Manager      ║  • NVS — gerenciador de versões do Node.js          ║
-║   System Tweaks    ║  • Node.js LTS — runtime JavaScript                 ║
-║   Apps Opcionais   ║  • VS Code — editor de código                       ║
-║   ─────────────    ║  • Hoppscotch — cliente de API open-source          ║
-║   Instalar Tudo    ║                                                     ║
-║   Sair             ║                                                     ║
-╠════════════════════╩═════════════════════════════════════════════════════╣
-║  [↑↓] Navegar   [Enter] Selecionar   [Q] Sair                           ║
+║              [  ASCII art WELLDONE DEVKIT  ]                             ║
+╟─ v2.2  |  github.com/WellytonSdJ/welldone-devkit ──────────────────────╢
+╠══════════════════════════════════════════════════════════════════════════╣
+║  [1] Dev Essentials                                                      ║
+║  [2] Terminal Theme                                                      ║
+║  [3] PowerShell Setup                                                    ║
+║  [4] Git Setup                                                           ║
+║  [5] SSH Manager                                                         ║
+║  [6] System Tweaks                                                       ║
+║  [7] Pasta Inicial                                                       ║
+║  [8] Apps Opcionais                                                      ║
+║  ────────────────────────────────                                        ║
+║  [9] Instalar Tudo                                                       ║
+╠══════════════════════════════════════════════════════════════════════════╣
+║  Digite o número e pressione Enter. [0] Sair                             ║
 ╚══════════════════════════════════════════════════════════════════════════╝
 ```
 
@@ -98,7 +96,6 @@ Instala as ferramentas base via winget:
 | **NVS** | Gerenciador de versões do Node.js |
 | **Node.js LTS** | Runtime JavaScript (via NVS) |
 | **VS Code** | Editor de código |
-| **Hoppscotch** | Cliente de API open-source (substituto leve do Postman) |
 
 ---
 
@@ -223,7 +220,7 @@ Executa todos os módulos em sequência — ideal para configurar um PC novo do 
 
 ```
 welldone-devkit/
-├── welldone.ps1                    ← entrada principal (TUI)
+├── welldone.ps1                    ← entrada principal
 ├── assets/
 │   └── logo.txt                   ← ASCII art do header
 ├── themes/
@@ -233,7 +230,7 @@ welldone-devkit/
     │   ├── colors.ps1             ← paleta neon (true-color ANSI)
     │   ├── ansi.ps1               ← helpers de cursor e console
     │   ├── helpers.ps1            ← Run-Step, Install-Package, Confirm-Action
-    │   └── ui.ps1                 ← engine TUI (painéis, menu, boot screen)
+    │   └── ui.ps1                 ← menu numerado, header, boot screen
     └── modules/
         ├── install_dev_essentials.ps1
         ├── install_terminal_theme.ps1  ← Oh My Posh (PS + Git Bash)
@@ -246,14 +243,13 @@ welldone-devkit/
 
 ---
 
-## Navegação da TUI
+## Navegação
 
-| Tecla | Ação |
+| Input | Ação |
 |---|---|
-| `↑` / `W` | Item anterior |
-| `↓` / `S` | Próximo item |
-| `Enter` | Selecionar |
-| `Q` | Sair / voltar ao menu |
+| `1`–`9` + Enter | Selecionar opção |
+| `0` + Enter | Sair |
+| `Q` + Enter | Sair |
 
 ---
 

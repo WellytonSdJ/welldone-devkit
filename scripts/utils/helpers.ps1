@@ -56,8 +56,14 @@ function Test-PackageInstalled([string]$Id) {
 
 function Install-Package {
     param([string]$Id, [string]$Name)
-    Run-Step "Instalando ${Name}" {
-        winget install $Id --accept-source-agreements --accept-package-agreements --silent 2>&1
+    Write-Host "  ${CYAN}›${NC} ${WHITE}Instalando ${Name}...${NC}" -NoNewline
+    winget install $Id --accept-source-agreements --accept-package-agreements --silent *>&1 | Out-Null
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host " ${GREEN}OK${NC}"
+        return $true
+    } else {
+        Write-Host " ${RED}FALHOU${NC}"
+        return $false
     }
 }
 
