@@ -17,6 +17,7 @@ $Root = $PSScriptRoot
 . "$Root\scripts\utils\ansi.ps1"
 . "$Root\scripts\utils\helpers.ps1"
 . "$Root\scripts\utils\ui.ps1"
+. "$Root\scripts\utils\prerequisites.ps1"
 
 Enable-VirtualTerminal
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -70,6 +71,7 @@ function Run-AllModules {
 
 # ─── Boot screen + main loop ──────────────────────────────────────────────────
 Show-BootScreen
+if (-not (Show-Prerequisites)) { exit 0 }
 
 while ($true) {
     $choice = Show-Menu -Items $menuItems `

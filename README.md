@@ -53,6 +53,17 @@
 
 ---
 
+## Verificação automática de pré-requisitos
+
+Ao iniciar, o WellDone DevKit verifica automaticamente se os componentes necessários estão presentes e guia a instalação dos que estiverem faltando.
+
+| Componente | Papel | Se ausente |
+|---|---|---|
+| **winget** | Instala todos os apps | Abre a Microsoft Store no App Installer |
+| **OpenSSH** | Módulo SSH Manager | Exibe instruções e segue sem o módulo SSH |
+
+---
+
 ## Requisitos
 
 | Requisito | Versão mínima |
@@ -62,6 +73,8 @@
 | winget | App Installer (Microsoft Store) |
 
 > **winget** já vem instalado no Windows 11 e em versões atualizadas do Windows 10. Se não tiver, instale pelo [App Installer](https://apps.microsoft.com/detail/9NBLGGH4NNS1) na Microsoft Store.
+
+> **Git** é necessário apenas para clonar o repositório. Se preferir, baixe o `.zip` direto pelo GitHub — o módulo **Git Setup** cuida da instalação e configuração completa.
 
 ---
 
@@ -92,7 +105,6 @@ Instala as ferramentas base via winget:
 
 | Ferramenta | Descrição |
 |---|---|
-| **Git** | Controle de versão |
 | **NVS** | Gerenciador de versões do Node.js |
 | **Node.js LTS** | Runtime JavaScript (via NVS) |
 | **VS Code** | Editor de código |
@@ -146,7 +158,7 @@ Cores do PSReadLine mapeadas para a paleta WellDone Neon:
 ---
 
 ### Git Setup
-Configura o Git globalmente:
+Instala (ou atualiza) o Git via winget e configura globalmente:
 
 ```
 user.name          → seu nome
@@ -212,7 +224,8 @@ Executa todos os módulos em sequência — ideal para configurar um PC novo do 
 4. Git Setup
 5. SSH Manager
 6. System Tweaks
-7. Apps Opcionais
+7. Pasta Inicial
+8. Apps Opcionais
 
 ---
 

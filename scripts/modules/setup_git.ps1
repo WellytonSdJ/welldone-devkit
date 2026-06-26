@@ -6,8 +6,16 @@ param([string]$Root)
 
 Show-ModuleHeader "CONFIGURAÇÃO DO GIT"
 
+if (-not (Test-Winget)) {
+    Write-Host "  ${RED}✗${NC} winget não encontrado. Instale o App Installer da Microsoft Store."
+    Pause-Prompt; return
+}
+
+Run-Step "Instalando / atualizando Git" { winget install --id Git.Git -e --source winget --accept-package-agreements --accept-source-agreements 2>&1 }
+Write-Host ""
+
 if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
-    Write-Host "  ${RED}✗ Git não encontrado. Execute 'Dev Essentials' primeiro.${NC}"
+    Write-Host "  ${RED}✗ Git não encontrado após instalação. Reinicie o terminal e tente novamente.${NC}"
     Pause-Prompt; return
 }
 

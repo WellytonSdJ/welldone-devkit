@@ -6,6 +6,12 @@ param([string]$Root)
 
 Show-ModuleHeader "GERENCIADOR SSH"
 
+if (-not (Get-Command ssh-keygen -ErrorAction SilentlyContinue)) {
+    Write-Host "  ${RED}✗${NC} OpenSSH não encontrado."
+    Write-Host "  ${GRAY}Ative em: Configurações → Apps → Recursos Opcionais → Cliente OpenSSH${NC}"
+    Pause-Prompt; return
+}
+
 $sshDir    = "$env:USERPROFILE\.ssh"
 $keyFile   = "$sshDir\id_ed25519"
 $pubFile   = "$keyFile.pub"

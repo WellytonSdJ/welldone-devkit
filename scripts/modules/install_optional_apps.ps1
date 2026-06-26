@@ -6,6 +6,11 @@ param([string]$Root)
 
 Show-ModuleHeader "APPS OPCIONAIS"
 
+if (-not (Test-Winget)) {
+    Write-Host "  ${RED}✗${NC} winget não encontrado. Instale o App Installer da Microsoft Store."
+    Pause-Prompt; return
+}
+
 $apps = @(
     @{ Id='Warp.Warp';                     Name='Warp Terminal';   Cat='Terminal'      }
     @{ Id='Opera.OperaGX';                 Name='Opera GX';        Cat='Browser'       }
