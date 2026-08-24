@@ -18,6 +18,9 @@ $Root = $PSScriptRoot
 . "$Root\scripts\utils\helpers.ps1"
 . "$Root\scripts\utils\ui.ps1"
 . "$Root\scripts\utils\prerequisites.ps1"
+. "$Root\scripts\utils\state.ps1"
+
+Init-StateDir $Root
 
 Enable-VirtualTerminal
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -35,6 +38,7 @@ $menuItems = @(
     @{ Label = "Apps Opcionais";   Action = { Invoke-Module "install_optional_apps.ps1"   } }
     @{ Separator = $true }
     @{ Label = "Instalar Tudo";    Action = { Run-AllModules } }
+    @{ Label = "Reverter Alterações"; Action = { Invoke-Module "revert_changes.ps1"      } }
 )
 
 # ─── Module dispatcher ────────────────────────────────────────────────────────

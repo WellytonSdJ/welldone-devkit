@@ -1,0 +1,5 @@
+# WellDone DevKit — dados locais da máquina onde o script rodou.
+# Guarda os valores "de antes" de cada configuração alterada, para permitir
+# reverter cada ação de forma independente (menu "Reverter Alterações").
+# Não faz parte do projeto — é específico de cada máquina.
+.welldone-state/

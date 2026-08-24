@@ -46,6 +46,7 @@
 ║  [8] Apps Opcionais                                                      ║
 ║  ────────────────────────────────                                        ║
 ║  [9] Instalar Tudo                                                       ║
+║  [10] Reverter Alterações                                                ║
 ╠══════════════════════════════════════════════════════════════════════════╣
 ║  Digite o número e pressione Enter. [0] Sair                             ║
 ╚══════════════════════════════════════════════════════════════════════════╝
@@ -229,6 +230,22 @@ Executa todos os módulos em sequência — ideal para configurar um PC novo do 
 
 ---
 
+### Reverter Alterações
+Desfaz, uma a uma e de forma independente, as configurações aplicadas pelos módulos abaixo — **sem desinstalar nenhum programa**. Cada item só aparece disponível depois que o módulo correspondente foi rodado, e cada um restaura exatamente o valor que existia *antes* do WellDone mexer (não um "padrão" genérico).
+
+| Item | O que a reversão faz |
+|---|---|
+| **Pasta Inicial do Terminal** | Remove a pasta `projects` como diretório padrão do terminal (perfil PowerShell + Windows Terminal) e restaura a pasta que era usada antes. |
+| **Terminal Theme (Oh My Posh)** | Remove a inicialização do Oh My Posh do perfil PowerShell, do Git Bash (`.bashrc`) e a fonte configurada no Warp. Não desinstala a fonte nem o Oh My Posh. |
+| **PowerShell Setup** | Remove o bloco de configuração (PSReadLine, Terminal-Icons, cores) do perfil PowerShell. Não desinstala o PowerShell 7 nem os módulos. |
+| **Git Setup** | Restaura `user.name`, `user.email` e as demais configurações globais do Git para os valores de antes (remove as chaves que não existiam). Não desinstala o Git. |
+| **System Tweaks** | Restaura Explorer, som de inicialização, Execution Policy e suporte ANSI para os valores de antes. **Não** desabilita o WSL2 — é um recurso do Windows, não uma preferência simples. |
+| **SSH Manager (serviço)** | Restaura o tipo de inicialização do serviço `ssh-agent`. Não apaga a chave SSH gerada nem a remove do GitHub. |
+
+Os valores originais ficam salvos em `.welldone-state\` (uma pasta local, fora do controle de versão — veja `.gitignore`), criada na primeira vez que cada módulo roda.
+
+---
+
 ## Estrutura do projeto
 
 ```
@@ -238,12 +255,14 @@ welldone-devkit/
 │   └── logo.txt                   ← ASCII art do header
 ├── themes/
 │   └── welldone_neon.omp.json     ← tema Oh My Posh
+├── .welldone-state/                ← (gerado em runtime) snapshots para a reversão
 └── scripts/
     ├── utils/
     │   ├── colors.ps1             ← paleta neon (true-color ANSI)
     │   ├── ansi.ps1               ← helpers de cursor e console
     │   ├── helpers.ps1            ← Run-Step, Install-Package, Confirm-Action
-    │   └── ui.ps1                 ← menu numerado, header, boot screen
+    │   ├── ui.ps1                 ← menu numerado, header, boot screen
+    │   └── state.ps1              ← snapshots "antes/depois" usados pela reversão
     └── modules/
         ├── install_dev_essentials.ps1
         ├── install_terminal_theme.ps1  ← Oh My Posh (PS + Git Bash)
@@ -251,7 +270,9 @@ welldone-devkit/
         ├── setup_git.ps1
         ├── manage_ssh.ps1
         ├── system_tweaks.ps1
-        └── install_optional_apps.ps1
+        ├── setup_start_folder.ps1
+        ├── install_optional_apps.ps1
+        └── revert_changes.ps1          ← menu "Reverter Alterações"
 ```
 
 ---
@@ -260,7 +281,7 @@ welldone-devkit/
 
 | Input | Ação |
 |---|---|
-| `1`–`9` + Enter | Selecionar opção |
+| `1`–`10` + Enter | Selecionar opção |
 | `0` + Enter | Sair |
 | `Q` + Enter | Sair |
 
