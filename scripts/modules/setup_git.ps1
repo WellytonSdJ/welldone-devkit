@@ -1,9 +1,65 @@
-param([string]$Root)
+param([string]$Root, [switch]$Revert)
 . "$Root\scripts\utils\colors.ps1"
 . "$Root\scripts\utils\ansi.ps1"
 . "$Root\scripts\utils\helpers.ps1"
 . "$Root\scripts\utils\ui.ps1"
+. "$Root\scripts\utils\state.ps1"
+Init-StateDir $Root
 
+# Chaves globais de git que este módulo configura.
+$gitKeys = @("user.name", "user.email", "init.defaultBranch", "core.editor", `
+             "merge.tool", "pull.rebase", "core.autocrlf", "alias.lg")
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  MODO REVERSÃO
+# ═══════════════════════════════════════════════════════════════════════════
+if ($Revert) {
+    Show-ModuleHeader "REVERTER — GIT SETUP"
+    Write-Host "  ${CYAN}O que esta reversão faz:${NC}"
+    Write-Host "  ${GRAY}• Restaura user.name, user.email e as demais configurações globais do Git${NC}"
+    Write-Host "  ${GRAY}  para os valores que existiam antes de rodar este módulo${NC}"
+    Write-Host "  ${GRAY}• Chaves que não existiam antes são removidas (git config --unset)${NC}"
+    Write-Host "  ${GRAY}• NÃO desinstala o Git${NC}"
+    Write-Host ""
+
+    if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+        Write-Host "  ${RED}✗ Git não encontrado — nada para reverter.${NC}"
+        Pause-Prompt; return
+    }
+
+    $state = Get-State "git_setup"
+    if (-not $state) {
+        Write-Host "  ${GRAY}Nada para reverter — este módulo ainda não tinha sido configurado.${NC}"
+        Write-Host ""
+        Pause-Prompt
+        return
+    }
+
+    foreach ($key in $gitKeys) {
+        $prop = $state.($key -replace '\.', '_')
+        if ($null -eq $prop) { continue }
+        Write-Host "  ${CYAN}›${NC} ${WHITE}${key}${NC}..." -NoNewline
+        if ($prop.Existed) {
+            git config --global $key "$($prop.Value)" 2>&1 | Out-Null
+            Write-Host " ${GREEN}restaurado para '$($prop.Value)'${NC}"
+        } else {
+            git config --global --unset $key 2>&1 | Out-Null
+            Write-Host " ${GREEN}removido${NC}"
+        }
+    }
+
+    Remove-State "git_setup"
+    Write-Host ""
+    Write-Host "  ${GREEN}✓ Reversão concluída!${NC}"
+    Write-Host "  ${GRAY}O Git continua instalado — só a configuração global foi restaurada.${NC}"
+    Write-Host ""
+    Pause-Prompt
+    return
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  MODO NORMAL
+# ═══════════════════════════════════════════════════════════════════════════
 Show-ModuleHeader "CONFIGURAÇÃO DO GIT"
 
 if (-not (Test-Winget)) {
@@ -33,6 +89,15 @@ if ($curName) {
     }
 }
 
+# ─── Snapshot dos valores originais (só na primeira vez) ──────────────────────
+$snapshot = @{}
+foreach ($key in $gitKeys) {
+    $existingValue = git config --global $key 2>$null
+    $existed = [bool]$existingValue
+    $snapshot[$key -replace '\.', '_'] = @{ Existed = $existed; Value = $existingValue }
+}
+Save-StateOnce "git_setup" $snapshot
+
 Write-Host ""
 Write-Host "  ${CYAN}Nome completo (ex: Wellyston Souza): ${NC}" -NoNewline
 $name = Read-Host
@@ -55,4 +120,5 @@ Run-Step "Alias: git lg (log bonito)"    {
 Write-Host ""
 Write-Host "  ${GREEN}✓ Git configurado com sucesso!${NC}"
 Write-Host "  ${GRAY}Use ${WHITE}git lg${GRAY} para um log colorido e compacto.${NC}"
+Write-Host "  ${GRAY}💡 Para desfazer: menu principal → ${WHITE}Reverter Alterações${GRAY}.${NC}"
 Pause-Prompt

@@ -1,9 +1,82 @@
-param([string]$Root)
+param([string]$Root, [switch]$Revert)
 . "$Root\scripts\utils\colors.ps1"
 . "$Root\scripts\utils\ansi.ps1"
 . "$Root\scripts\utils\helpers.ps1"
 . "$Root\scripts\utils\ui.ps1"
+. "$Root\scripts\utils\state.ps1"
+Init-StateDir $Root
 
+$profileMarker = "# WellDone: startdir"
+
+function Remove-StartFolderProfileBlock {
+    $profilePath = $PROFILE.CurrentUserAllHosts
+    if (-not (Test-Path $profilePath)) { return $false }
+    $raw = Get-Content $profilePath -Raw -ErrorAction SilentlyContinue
+    if (-not $raw -or -not ($raw -match [regex]::Escape($profileMarker))) { return $false }
+    $updated = $raw -replace ("(?m)\r?\n?" + [regex]::Escape($profileMarker) + "\r?\nSet-Location[^\r\n]*(\r?\n)?"), ""
+    [System.IO.File]::WriteAllText($profilePath, $updated)
+    return $true
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  MODO REVERSÃO
+# ═══════════════════════════════════════════════════════════════════════════
+if ($Revert) {
+    Show-ModuleHeader "REVERTER — PASTA INICIAL DO TERMINAL"
+    Write-Host "  ${CYAN}O que esta reversão faz:${NC}"
+    Write-Host "  ${GRAY}• Remove o 'Set-Location' para a pasta projects do perfil do PowerShell${NC}"
+    Write-Host "  ${GRAY}• Restaura a pasta inicial do Windows Terminal para o valor de antes de rodar este módulo${NC}"
+    Write-Host "  ${GRAY}• Não apaga a pasta 'projects' nem qualquer arquivo dentro dela${NC}"
+    Write-Host ""
+
+    $didProfile = Remove-StartFolderProfileBlock
+    if ($didProfile) {
+        Write-Host "  ${GREEN}✓${NC} Perfil do PowerShell restaurado"
+    } else {
+        Write-Host "  ${GRAY}—${NC} Perfil do PowerShell já não tinha essa configuração"
+    }
+
+    $state = Get-State "start_folder"
+    $didWt = $false
+    if ($state -and $state.WtPath -and (Test-Path $state.WtPath)) {
+        try {
+            $json = Get-Content $state.WtPath -Raw | ConvertFrom-Json
+            if ($json.profiles -and $json.profiles.defaults) {
+                if ($state.HadStartingDirectory) {
+                    $json.profiles.defaults | Add-Member -NotePropertyName startingDirectory -NotePropertyValue $state.PreviousStartingDirectory -Force
+                } elseif ($json.profiles.defaults.PSObject.Properties['startingDirectory']) {
+                    $json.profiles.defaults.PSObject.Properties.Remove('startingDirectory')
+                }
+                [System.IO.File]::WriteAllText($state.WtPath, ($json | ConvertTo-Json -Depth 20))
+                $didWt = $true
+            }
+        } catch {
+            Write-Host "  ${YELLOW}⚠ Não foi possível atualizar o Windows Terminal: $($_.Exception.Message)${NC}"
+        }
+    }
+
+    if ($didWt) {
+        Write-Host "  ${GREEN}✓${NC} Windows Terminal restaurado"
+        Remove-State "start_folder"
+    } else {
+        Write-Host "  ${GRAY}—${NC} Nada para restaurar no Windows Terminal"
+    }
+
+    Write-Host ""
+    if ($didProfile -or $didWt) {
+        Write-Host "  ${GREEN}✓ Reversão concluída!${NC}"
+        Write-Host "  ${GRAY}Abra um novo terminal para ver o efeito.${NC}"
+    } else {
+        Write-Host "  ${GRAY}Nada para reverter — este módulo ainda não tinha sido configurado.${NC}"
+    }
+    Write-Host ""
+    Pause-Prompt
+    return
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  MODO NORMAL — configura a pasta inicial
+# ═══════════════════════════════════════════════════════════════════════════
 Show-ModuleHeader "PASTA INICIAL DO TERMINAL"
 
 $docsPath     = [Environment]::GetFolderPath("MyDocuments")
@@ -36,7 +109,7 @@ if (-not (Test-Path $profilePath)) {
     New-Item -ItemType File -Path $profilePath -Force | Out-Null
 }
 
-$marker = "# WellDone: startdir"
+$marker = $profileMarker
 $raw    = Get-Content $profilePath -Raw -ErrorAction SilentlyContinue
 
 if ($raw -and ($raw -match [regex]::Escape($marker))) {
@@ -66,6 +139,17 @@ foreach ($wtPath in $wtPaths) {
         if (-not $json.profiles.defaults) {
             $json.profiles | Add-Member -NotePropertyName defaults -NotePropertyValue ([PSCustomObject]@{}) -Force
         }
+
+        # Guarda o valor original (ou a ausência dele) ANTES de sobrescrever —
+        # só na primeira vez, para permitir reverter para o que sempre foi.
+        $hadStartDir  = $null -ne $json.profiles.defaults.PSObject.Properties['startingDirectory']
+        $prevStartDir = if ($hadStartDir) { $json.profiles.defaults.startingDirectory } else { $null }
+        Save-StateOnce "start_folder" @{
+            WtPath                    = $wtPath
+            HadStartingDirectory      = $hadStartDir
+            PreviousStartingDirectory = $prevStartDir
+        }
+
         $json.profiles.defaults | Add-Member -NotePropertyName startingDirectory -NotePropertyValue $projectsPath -Force
         [System.IO.File]::WriteAllText($wtPath, ($json | ConvertTo-Json -Depth 20))
         Write-Host " ${GREEN}OK${NC}"
@@ -82,5 +166,6 @@ if (-not $wtFound) {
 Write-Host ""
 Write-Host "  ${GREEN}✓ Configuração concluída!${NC}"
 Write-Host "  ${GRAY}Abra um novo terminal para ver o efeito.${NC}"
+Write-Host "  ${GRAY}💡 Para desfazer: menu principal → ${WHITE}Reverter Alterações${GRAY}.${NC}"
 Write-Host ""
 Pause-Prompt
